@@ -268,10 +268,10 @@ class ProductItem extends StatelessWidget {
               Center(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const DetailsScreen()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   //MaterialPageRoute(builder: (context) => const DetailsScreen()),
+                    // );
                   },
                   child: Image.asset(
                     "assets/images/Dw.png",

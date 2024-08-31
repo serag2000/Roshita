@@ -17,7 +17,7 @@ class AllProduct {
     String? imgUrl1;
     int ?categoryId;
     DateTime? createdAt;
-    DateTime ?updatedAt;
+    DateTime? updatedAt;
 
     AllProduct({
         this.id,

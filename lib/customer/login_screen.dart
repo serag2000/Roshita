@@ -76,60 +76,71 @@ class _LoginScreenState extends State<LoginScreen> {
   var formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  // final _api = Api();
+  final _api = Api();
 
-  // postHttp(String userName, String password) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  postHttp(String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  //   // isLoading = true;
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-      
-  //     var response = await _api
-  //         .post('api/userLogin', {'email': userName, 'password': password});
-  //     var result = json.decode(response.body);
-  //     if (response.statusCode == 200) {
-  //       if (kDebugMode) {
-  //         print("access_token ===> ${result['access_token']}");
-  //       }
+    // isLoading = true;
+    try {
+      setState(() {
+        isLoading = true;
+      });
 
-  //       await prefs.setBool('islogin', true);
-  //       await prefs.setString('token', result['access_token']);
-  //       // ignore: use_build_context_synchronously
-  //       Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => const TabsScreen(),
-  //           ));
+      var response = await _api
+          .post('api/Login', {'email': email, 'password': password});
+      var result = json.decode(response.body);
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print("result :  ${result}");
+          print("access_token ===> ${result['access_token']}");
+        }
 
-  //       // final data = result.map((json) => CoinsModel.fromJson(json)).toList();
-  //       // setCoins(data);
-  //     } else {
-  //       if (kDebugMode) {
-  //         print("response.statusCode ===> ${response.statusCode}");
-  //       }
-  //       if (kDebugMode) {
-  //         print("response ===> ${response.body}");
-  //       }
-  //       // ignore: use_build_context_synchronously
-  //       mySnackBarBack(context, result["error"]);
-  //        setState(() {
-  //        isLoading = false;
-  //     });
-     
-  //     await prefs.setBool('islogin', false);
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //        isLoading = false;
-  //     });
-     
-  //     await prefs.setBool('islogin', false);
-     
-  //   }
-  // }
+        await prefs.setBool('islogin', true);
+        await prefs.setString('token', result['access_token']);
+        // ignore: use_build_context_synchronously
+        if(email.contains("doctor")){
+          //navigate to doctor
+        }else if (email.contains("admin")){
+          //admin
+        }else if(email.contains("pharmacist")){
+          //ph
+        }else{
+            // ignore: use_build_context_synchronously
+            Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TabsScreen(),
+            ));
+        }
+        await prefs.setString('token', result['access_token']);
+        
+
+        // final data = result.map((json) => CoinsModel.fromJson(json)).toList();
+        // setCoins(data);
+      } else {
+        if (kDebugMode) {
+          print("response.statusCode ===> ${response.statusCode}");
+        }
+        if (kDebugMode) {
+          print("response ===> ${response.body}");
+        }
+        // ignore: use_build_context_synchronously
+        mySnackBarBack(context, result["error"]);
+        setState(() {
+          isLoading = false;
+        });
+
+        await prefs.setBool('islogin', false);
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+
+      await prefs.setBool('islogin', false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: size.width / 20,
                     ),
-                     const Text('Log in to your Account'),
+                    const Text('Log in to your Account'),
                     SizedBox(
                       height: size.width / 7,
                     ),
@@ -233,31 +244,30 @@ class _LoginScreenState extends State<LoginScreen> {
                               border: Border.all(color: Colors.blue, width: 2),
                             ),
                             child: const Center(
-                                child: CircularProgressIndicator(color: Colors.white,)),
+                                child: CircularProgressIndicator(
+                              color: Colors.white,
+                            )),
                           )
                         : InkWell(
                             onTap: () async {
                               {
+                                if (formKey.currentState!.validate()) {
+                                  try {
+                                    await postHttp(emailController.text,
+                                        passwordController.text);
+                                    //ignore: use_build_context_synchronously;
+                                  } catch (e) {
+                                    isLoading = false;
+                                    if (kDebugMode) {
+                                      print("error");
+                                    }
+                                  }
 
-                                // if (formKey.currentState!.validate()) {
-                                  
-
-                                //    try {
-                                //     await postHttp(emailController.text,
-                                //         passwordController.text);
-                                //     //ignore: use_build_context_synchronously;
-                                //   } catch (e) {
-                                //     isLoading = false;
-                                //     if (kDebugMode) {
-                                //       print("error");
-                                //     }
-                                //   }
-
-                                //   islogin = true;
-                                //   SharedPreferences prefs =
-                                //       await SharedPreferences.getInstance();
-                                //   await prefs.setBool('islogin', true);
-                                // }
+                                  islogin = true;
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setBool('islogin', true);
+                                }
                               }
                             },
                             child: Container(

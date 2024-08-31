@@ -30,7 +30,8 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
             leading: IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailsScreen(),));
+              Navigator.pop(context);
+              //Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(),));
             }, icon: const Icon(Icons.arrow_back , color: Colors.black,)),
       ),
       body: Padding(
@@ -43,7 +44,7 @@ class _CartScreenState extends State<CartScreen> {
               child: ListView.separated(
                 //physics:  NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(vertical: 5),
-                itemCount: 3,
+                itemCount: 2,
                 itemBuilder: (context, index) => const ContinerCartScreen(),
                 separatorBuilder: (context, index) => Container(
                   width: double.infinity,

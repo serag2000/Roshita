@@ -1,12 +1,35 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:project/api/cart.dart';
 import 'package:project/customer/cart_screen.dart';
 import 'package:project/tabs_screen.dart';
 
 class DetailsScreen extends StatefulWidget {
-  const DetailsScreen({super.key});
+  int? productId;
+  String? title;
+  String? description;
+  double? price;
+  DetailsScreen({super.key,this.productId,required this.title, required this.description, required this.price});
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
+}
+final CartApi api = CartApi();
+add(int? productId) async{
+  try{
+    var response = await api.addToCart(url:'api/userAuth/cart',productId: productId!);
+    var result = jsonDecode(response.body);
+    if(response.statusCode == 200){
+      return result['message'];
+    }
+
+  }catch(e){
+    if(kDebugMode){
+      print("eror: " + e.toString());
+    }
+  }
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
@@ -18,9 +41,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const TabsScreen()),
+            Navigator.pop(
+              context
             );
           },
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -47,14 +69,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   SizedBox(
                     height: size.width / 20,
                   ),
-                  const Text('Lorem Ipsum',
+                  Text('${widget.title}',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                   SizedBox(
                     height: size.width / 20,
                   ),
-                  const Text(
-                      'Lorem ipsum dolor sit amet consectetur. Mauris scelerisque mattis lacus a vestibulum a venenatis diam hendrerit. Ac platea enim purus suspendisse vel. Nunc donec sodales facilisis arcu placerat morbi et. L'),
+                  Text(
+                      '${widget.description}'),
                 ],
               );
             },
@@ -66,8 +88,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
         child: Row(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "\$120LYD",
+            Text(
+              "\$ ${widget.price}",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -77,10 +99,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
               width: size.width / 2.9,
             ),
             InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const CartScreen()));
-              },
+              onTap: () async {
+                if(kDebugMode){
+                  print("id :" + widget.productId.toString());
+                }
+                await add(widget.productId!) != '' ? Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(),)) : SnackBar(content: Text('error'));
+              }
+              ,
               child: Container(
                 width: 120,
                 height: 40,

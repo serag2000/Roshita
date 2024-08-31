@@ -1,5 +1,6 @@
 // ----------------------------------- UI CONSTS ----------------------------------------
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ----------------------------------- Mobile ----------------------------------------
 
@@ -22,3 +23,8 @@ const Color greyColor = Color(0xFFA9A9A9);
 
 const Color warningColor = Color(0xFFcc3c38);
 const Color successColor = Color(0xFF3dc381);
+
+getToken() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString('token') ?? '';
+  }
