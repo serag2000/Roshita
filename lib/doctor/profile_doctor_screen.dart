@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/doctor/add_description.dart';
 
 import 'edit_doctor_profile.dart';
 
@@ -159,7 +160,7 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                     child: Center(
                       child: InkWell(
                         onTap: () {
-                          //Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => AddDescription(),));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => AddDescription(),));
                         },
                         child: Row(
                           children: [

@@ -1,8 +1,6 @@
 
 
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'dart:async';
@@ -21,13 +19,29 @@ class CartApi{
       },
       body: {
         'productId': productId.toString(),
-        'qty':'3'
+       
       }
       );
       return res;
   }
 
   get(Uri parse) {}
+
+  //   static Future<Response> deleteCart(int id) async {
+  //   //business logic to send data to server
+  //   final Response response = await delete('$baseUrl/api/userAuth/cart/$id' as Uri,
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json'
+  //       });
+
+  //   if (response.statusCode == 200) {
+  //     //print(response.body);
+  //     return response;
+  //   } else {
+  //     //print('Error');
+  //     throw Exception("Can't load author");
+  //   }
+  // }
 
 //    Future<List<CartItem>> getCartItems() async {
 //   final response = await http.get(Uri.parse('/api/cart'));

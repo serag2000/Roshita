@@ -79,70 +79,70 @@ class _AddDescriptionState extends State<AddDescription> {
               SizedBox(
                 height: 200,
                 child: ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(height: 20),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 20),
                   itemCount: count,
                   itemBuilder: (context, index) => Row(
                     children: [
                       SizedBox(
-                          width: size.width / 2.3,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(8)),
-                            // child: DropdownButton(
-                            //   value: 'item1 ',
-                            //   hint: const Text('selectMedicine'),
-                            //   items: itemList
-                            //       .map((e) => DropdownMenuItem(
-                            //             child: Text(e),
-                            //             value: e,
-                            //           ))
-                            //       .toList(),
-                            //   onChanged: (val) {
-                            //     setState(() {
-                            //       selectMedicine= val!;
-                            //     });
-                            //   },
-                            // ),
-                             
-                              child: DropdownButton2(
-                                isExpanded: true,
-                                hint: Text(
-                                  'Select Item',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Theme.of(context).hintColor,
-                                  ),
-                                ),
-                                items: items
-                                    .map((String item) =>
-                                        DropdownMenuItem(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ))
-                                    .toList(),
-                                value: selectedValue,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    selectedValue = value;
-                                  });
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  height: 55,
-                                  width: 140,
-                                ),
-                                menuItemStyleData: const MenuItemStyleData(
-                                  height: 40,
-                                ),
+                        width: size.width / 2.3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(8)),
+                          // child: DropdownButton(
+                          //   value: 'item1 ',
+                          //   hint: const Text('selectMedicine'),
+                          //   items: itemList
+                          //       .map((e) => DropdownMenuItem(
+                          //             child: Text(e),
+                          //             value: e,
+                          //           ))
+                          //       .toList(),
+                          //   onChanged: (val) {
+                          //     setState(() {
+                          //       selectMedicine= val!;
+                          //     });
+                          //   },
+                          // ),
+
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            hint: Text(
+                              'Select Item',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
                               ),
                             ),
+                            items: items
+                                .map((String item) => DropdownMenuItem(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValue,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValue = value;
+                              });
+                            },
+                            buttonStyleData: const ButtonStyleData(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              height: 55,
+                              width: 140,
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
+                            ),
                           ),
+                        ),
+                      ),
                       SizedBox(width: size.width / 30),
                       SizedBox(
                         width: size.width / 2.2,
@@ -172,9 +172,9 @@ class _AddDescriptionState extends State<AddDescription> {
                   TextButton(
                       onPressed: () {
                         setState(() {
-                         if(count<5){
-                           count++;
-                         }
+                          if (count < 5) {
+                            count++;
+                          }
                         });
                       },
                       child: const Icon(Icons.add)),
@@ -224,18 +224,24 @@ class _AddDescriptionState extends State<AddDescription> {
                               Container(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                     showDialog(context: context, builder: (context) => AlertDialog(
-                                      title: Column(
-                                        children: [
-                                          const Text('The user is not registered in app', style: TextStyle(
-                                            color: Colors.red
-                                          )),
-                                          TextButton(onPressed: (){
-                                            Navigator.pop(context);
-                                          }, child: const Text('OK'))
-                                        ],
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Column(
+                                          children: [
+                                            const Text(
+                                                'The user is not registered in app',
+                                                style: TextStyle(
+                                                    color: Colors.red)),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('OK'))
+                                          ],
+                                        ),
                                       ),
-                                    ),);
+                                    );
                                   },
                                   child: const Text('Yes',
                                       style: TextStyle(

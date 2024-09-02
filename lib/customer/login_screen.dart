@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:project/admin/home_screen_admin.dart';
 import 'package:project/customer/create_account.dart';
 import 'package:project/customer/home_screen.dart';
+import 'package:project/doctor/profile_doctor_screen.dart';
+import 'package:project/pharmacist/home_pharmacist.dart';
 import 'package:project/tabs_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -87,8 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
         isLoading = true;
       });
 
-      var response = await _api
-          .post('api/Login', {'email': email, 'password': password});
+      var response =
+          await _api.post('api/Login', {'email': email, 'password': password});
       var result = json.decode(response.body);
       if (response.statusCode == 200) {
         if (kDebugMode) {
@@ -99,22 +102,36 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setBool('islogin', true);
         await prefs.setString('token', result['access_token']);
         // ignore: use_build_context_synchronously
-        if(email.contains("doctor")){
+        if (email.contains("doctor")) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProfileDoctorScreen(),
+              ));
           //navigate to doctor
-        }else if (email.contains("admin")){
+        } else if (email.contains("admin")) {
           //admin
-        }else if(email.contains("pharmacist")){
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreenAdmin(),
+              ));
+        } else if (email.contains("pharmacist")) {
           //ph
-        }else{
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const TabsScreen(),
-            ));
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePharmacist(),
+              ));
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TabsScreen(),
+              ));
         }
         await prefs.setString('token', result['access_token']);
-        
 
         // final data = result.map((json) => CoinsModel.fromJson(json)).toList();
         // setCoins(data);
@@ -178,8 +195,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: emailController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.email),
-                          labelText: 'Inter Your Email or Phone Number',
-                          hintText: 'Email',
+                          labelText: 'Email',
+                          hintText: 'inter your Email or number Phone',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0)),
                         ),
@@ -200,8 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.lock_outlined),
                           suffixIcon: const Icon(Icons.remove_red_eye_sharp),
-                          labelText: 'Inter Your Password',
-                          hintText: 'Password',
+                          labelText: 'Password',
+                          hintText: 'Inter Your Password',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0)),
                         ),

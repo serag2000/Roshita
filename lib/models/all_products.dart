@@ -14,7 +14,7 @@ class AllProduct {
     String ?description;
     double ?price;
     int ?qtyInStock;
-    String? imgUrl1;
+    String imgUrl1;
     int ?categoryId;
     DateTime? createdAt;
     DateTime? updatedAt;
@@ -25,7 +25,7 @@ class AllProduct {
         this.description,
         this.price,
         this.qtyInStock,
-        this.imgUrl1,
+        required this.imgUrl1,
         this.categoryId,
         this.createdAt,
         this.updatedAt,

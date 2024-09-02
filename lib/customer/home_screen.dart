@@ -179,7 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               );
                                             },
                                             child: Image.asset(
-                                              "assets/images/Dw.png",
+                                             'assets/images/Dw.png',
+                                              //"${snapshot.data?[index].imgUrl1}",
                                               height: size.width / 3.4,
                                               fit: BoxFit.cover,
                                             ),
@@ -290,8 +291,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       );
                     } else {
-                      return const CircularProgressIndicator(
-                        color: Colors.black,
+                      return  SizedBox(
+                        height: size.height*0.65,
+                        child:const Center(
+                          child:   CircularProgressIndicator(
+                            color: Colors.black,
+                          ),
+                        ),
                       );
                     }
                   }),
@@ -356,6 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   await prefs.setBool('islogin', false);
+                  await prefs.clear();
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

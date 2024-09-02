@@ -232,7 +232,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../customer/details_screen.dart';
 import '../helper/const.dart';
 
 class ProductItem extends StatelessWidget {

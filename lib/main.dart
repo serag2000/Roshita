@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/admin/home_screen_admin.dart';
-import 'package:project/customer/home_screen.dart';
 import 'package:project/customer/loading.dart';
-import 'package:project/customer/login_screen.dart';
 
 
 
