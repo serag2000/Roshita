@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  bool isSecure = true;
 
   final _api = Api();
 
@@ -212,11 +213,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextFormField(
-                        obscureText: true,
+                        obscureText: isSecure,
                         controller: passwordController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.lock_outlined),
-                          suffixIcon: const Icon(Icons.remove_red_eye_sharp),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isSecure = !isSecure;
+                              });
+                            },
+                            icon: Icon(isSecure
+                                ? Icons.remove_red_eye_sharp
+                                : Icons.lock),
+                          ),
                           labelText: 'Password',
                           hintText: 'Inter Your Password',
                           border: OutlineInputBorder(
@@ -240,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (_) => const ForgetPassword()));
+                                      builder: (_) =>  ForgetPassword()));
                             },
                             child: const Text('Forget Password?',
                                 style: TextStyle(
@@ -330,6 +340,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             )),
                       ],
                     ),
+                             SizedBox(
+                      height: size.height / 50,
+                    ),
+                    InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const TabsScreen(),
+                              ));
+                        },
+                        
+                        child: const Text(
+                          'Gust',
+                          style: TextStyle(color: Colors.blue),
+                        )),
                   ],
                 ),
               ),

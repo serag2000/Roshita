@@ -7,6 +7,7 @@ import 'package:project/admin/categorys_screen.dart';
 import 'package:project/admin/doctors_page.dart';
 import 'package:project/admin/modify_screen.dart';
 import 'package:project/admin/pharmacist_page.dart';
+import 'package:project/admin/product_admin_screen.dart';
 import 'package:project/customer/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -143,7 +144,8 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                 leading: const Icon(Icons.medical_services_outlined),
                 title: const Text('Products'),
                 onTap: () {
-                  
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductAdmin(),));
+
                 },
               ),
               ListTile(
@@ -157,7 +159,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                 leading: const Icon(Icons.add_business_rounded),
                 title: const Text('Add Product'),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddProduct(),));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  AddProduct(),));
                 },
               ),
               ListTile(
@@ -191,11 +193,8 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                       await SharedPreferences.getInstance();
                   await prefs.setBool('islogin', false);
                   await prefs.clear();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ));
+                 Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
                 },
               ),
             ],

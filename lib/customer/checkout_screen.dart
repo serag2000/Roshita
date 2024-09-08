@@ -1,184 +1,147 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:project/api/cart.dart';
 import 'package:project/api/check_out.dart';
 import 'package:project/customer/cart_screen.dart';
 import 'package:project/customer/login_screen.dart';
 import 'package:project/customer/orders_screen.dart';
-import 'package:project/models/checkOut.dart';
+import 'package:project/models/show_cart.dart';
 
 import '../helper/const.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  final  List<CartItem> data;
+  late double total;
+   CheckoutScreen({super.key,required this.data,required this.total});
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
+
 late String token;
 TextEditingController phone = TextEditingController();
 TextEditingController address = TextEditingController();
 bool isLoading = false;
 
-void alert({required BuildContext context, required Size size}){
-       showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                              title: Column(children: [
-                            Image.asset('assets/images/checkout.png',
-                                width: 150, height: 150),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Text('Order Success!'),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text('Your order has been placed successfully!  ',
-                                style: TextStyle(fontSize: 14)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const OrderScreen(),
-                                    ));
-                              },
-                              child: Container(
-                                width: size.width / 1.1,
-                                height: size.width / 10,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: mainColor,
-                                  border:
-                                      Border.all(color: mainColor, width: 2),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    "show invoice",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      // fontWeight: FontWeight.bold,
-                                      color: backgroundScreenColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ])));
+void alert({required BuildContext context, required Size size,required double total}) {
+  showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+              title: Column(children: [
+            Image.asset('assets/images/checkout.png', width: 150, height: 150),
+            const SizedBox(
+              height: 5,
+            ),
+            const Text('Order Success!'),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text('Your order has been placed successfully!  ',
+                style: TextStyle(fontSize: 14)),
+            const SizedBox(
+              height: 10,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>  OrderScreen(data: data,total: total),
+                    ));
+              },
+              child: Container(
+                width: size.width / 1.1,
+                height: size.width / 10,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: mainColor,
+                  border: Border.all(color: mainColor, width: 2),
+                ),
+                child: const Center(
+                  child: Text(
+                    "show invoice",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      // fontWeight: FontWeight.bold,
+                      color: backgroundScreenColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ])));
 }
 
-Future <void> submitCheckOut({required BuildContext context, required Size size}) async{
+Future<void> submitCheckOut(
+    {required BuildContext context, required Size size, required double total}) async {
+      try{
   isLoading = true;
-  int code =await CeckOutApi.checkOut(Phone: phone.text,address: address.text);
-   if(code == 200 || code == 201){
-    alert(context: context, size: size);
+  int code =
+      await CeckOutApi.checkOut(Phone: phone.text, address: address.text);
+  if (code == 200 || code == 201) {
+    alert(context: context, size: size,total: total);
     phone.clear();
     address.clear();
-
-   }else{
-    void alertFaild({required BuildContext context, required Size size}){
-       showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                              title: Column(children: [
-                            Image.asset('assets/images/error.png',
-                                width: 150, height: 150),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Text('Error!'),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text('Your order has been Faild !  ',
-                                style: TextStyle(fontSize: 14)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                width: size.width / 1.1,
-                                height: size.width / 10,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: mainColor,
-                                  border:
-                                      Border.all(color: mainColor, width: 2),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    "show invoice",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      // fontWeight: FontWeight.bold,
-                                      color: backgroundScreenColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ])));
-}
-
-
-   }
-   isLoading =false;
-}
-final _api = showInvoiceApi();
-
-showInvoiceApi() {
-}
-List<CartItem> data = [];
-
-Future<List<CartItem>> show() async {
-  // isLoading = true;
-  try {
-    var response = await _api.showCart('api/userAuth/cart');
-    var result = jsonDecode(response.body)['data'];
-    if (response.statusCode == 200) {
-      data = result.map<CartItem>((item) => CartItem.fromJson(item)).toList();
-      if (kDebugMode) {
-        print("token:" + token.toString());
-        // print("dddd ${jsonDecode(response.body)['data']}");
-        // print("res: $result");
-        // print("resultssss ===> ${data}");
-      }
-
-      // await prefs.setBool('islogin', true);
-      // await prefs.setString('token', result['access_token']);
-      // // ignore: use_build_context_synchronously
-
-      // setCoins(data);
-    } else {
-      if (kDebugMode) {
-        print("response.statusCode ===> ${response.statusCode}");
-        print("data ====> $data");
-      }
-      if (kDebugMode) {
-        print("response ===> ${response.body}");
-      }
-      // ignore: use_build_context_synchronously
-      // mySnackBarBack(context, result["error"]);
-
-      // await prefs.setBool('islogin', false);
-    }
-  } catch (e) {
-    // await prefs.setBool('islogin', false)
+  } else {
+     alertFaild(context: context,size: size);
   }
-
-  return data;
+  isLoading = false;
+      }catch(e){
+       alertFaild(context: context,size: size);
+      }
+      isLoading = false;
 }
+
+
+
+  void alertFaild({required BuildContext context, required Size size}) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                  title: Column(children: [
+                Image.asset('assets/images/error.png', width: 150, height: 150),
+                const SizedBox(
+                  height: 5,
+                ),
+                const Text('Error!'),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Your order has been Faild !  ',
+                    style: TextStyle(fontSize: 14)),
+                const SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: size.width / 1.1,
+                    height: size.width / 10,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: mainColor,
+                      border: Border.all(color: mainColor, width: 2),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "show invoice",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          // fontWeight: FontWeight.bold,
+                          color: backgroundScreenColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ])));
+      }
+
 class _CheckoutScreenState extends State<CheckoutScreen> {
+ 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -221,14 +184,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               SizedBox(
                 height: 200,
                 child: ListView.builder(
-                  itemBuilder: (context, index) => const Receipt(),
-                  itemCount: 2,
-                ),
+                         itemCount: widget.data.length,
+                       itemBuilder: (context, index) =>  Row(
+                        children: [
+                          Image.asset(
+                            'assets/images/Dw.png',
+                            width: 100,
+                            height: 100,
+                          ),
+                           Text(widget.data[index].productTitle,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14)),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                           Text("${widget.data[index].total}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14)),
+                        ],
+                      ),
+                   
+                  ),
               ),
               SizedBox(
                 height: size.width / 10,
               ),
-              const Row(
+               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -239,7 +220,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   Text(
-                    '350LYD',
+                    '${widget.total} LYD',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -295,13 +276,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
               InkWell(
                 onTap: () async {
-                  if(phone.text.isEmpty || address.text.isEmpty){
-                    mySnackBarBack(context, 'Please input your Address and your Phone ');
-
-                  }else{
-                   submitCheckOut(context: context,size: size);
+                  if (phone.text.isEmpty || address.text.isEmpty) {
+                    mySnackBarBack(
+                        context, 'Please input your Address and your Phone ');
+                  } else {
+                    submitCheckOut(context: context, size: size,total: widget.total);
                   }
-                 
                 },
                 child: Container(
                   width: size.width / 1.1,
@@ -311,7 +291,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     color: mainColor,
                     border: Border.all(color: mainColor, width: 2),
                   ),
-                  child: const Center(
+                  child: islogin?Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ): Center(
                     child: Text(
                       "Confirm Checkout",
                       textAlign: TextAlign.center,
@@ -332,34 +316,68 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 }
 
-class Receipt extends StatelessWidget {
-  const Receipt({super.key});
+// class Receipt extends StatefulWidget {
+//   const Receipt({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Image.asset(
-              'assets/images/Dw.png',
-              width: 100,
-              height: 100,
-            ),
-            const Text('Lorem Ipsum  .',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-            const Text('120LYD',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-          ],
-        ),
-        Container(
-          height: 1,
-          color: Colors.grey[350],
-          width: size.width / 1.5,
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   State<Receipt> createState() => _ReceiptState();
+// }
+
+// class _ReceiptState extends State<Receipt> {
+//   @override
+//   void initState() {
+//     show();
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     Size size = MediaQuery.of(context).size;
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         FutureBuilder(
+//             future: show(),
+//             builder: (context, snapshot) {
+//               if (snapshot.hasData) {
+//                 return ListView.builder(
+//                   itemCount: snapshot.data!.length,
+//                   itemBuilder: (context, index) {
+//                     return Row(
+//                       children: [
+//                         Image.asset(
+//                           'assets/images/Dw.png',
+//                           width: 100,
+//                           height: 100,
+//                         ),
+//                          Text("${snapshot.data![index].productTitle}",
+//                             style: TextStyle(
+//                                 fontWeight: FontWeight.bold, fontSize: 14)),
+//                          Text("${snapshot.data![index].total}",
+//                             style: TextStyle(
+//                                 fontWeight: FontWeight.bold, fontSize: 14)),
+//                       ],
+//                     );
+//                   },
+                  
+//                 );
+//               }else {
+//                       return  SizedBox(
+//                         height: size.height*0.65,
+//                         child:const Center(
+//                           child:   CircularProgressIndicator(
+//                             color: Colors.black,
+//                           ),
+//                         ),
+//                       );
+//                     }
+//             }),
+//         Container(
+//           height: 1,
+//           color: Colors.grey[350],
+//           width: size.width / 1.5,
+//         ),
+//       ],
+//     );
+//   }
+// }

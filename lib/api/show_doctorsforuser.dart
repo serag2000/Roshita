@@ -1,8 +1,6 @@
-  import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-import 'package:project/models/user_doctors.dart';
 import 'package:http/http.dart' as http;
 //String baseUrl = "http://192.168.66.48:8000/";
 // class ShowDoctors{
@@ -33,7 +31,6 @@ class ShowDoctors{
 String baseUrl = "http://192.168.66.48:8000/";
 
   Future<Response> getAllDoctors(url) async {
-    //String token = "efjhksdgfewrufhl wiheohferhfv eocghfne"
     if (kDebugMode) {
       print("GET ON $baseUrl$url");
     }
@@ -43,4 +40,5 @@ String baseUrl = "http://192.168.66.48:8000/";
     });
     return res;
  }
+ 
 }

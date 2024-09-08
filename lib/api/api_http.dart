@@ -24,9 +24,11 @@ class Api {
       print("STATUS CODE :${response.statusCode}");
     }
 
-    if (kDebugMode) {
-      print("RESPONSE BODY :${response.body}");
-    }
+    
+      if (kDebugMode) {
+        print("RESPONSE BODY :${response.body}");
+      }
+    
     return response;
   }
 

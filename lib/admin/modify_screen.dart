@@ -21,7 +21,7 @@ class _ModifyscreenState extends State<Modifyscreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: (){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const HomeScreenAdmin(),));
+          Navigator.pop(context);
         }, icon: const Icon(Icons.arrow_back, color: Colors.black,)),
         elevation: 0,
         title: const Text('Modify Product',

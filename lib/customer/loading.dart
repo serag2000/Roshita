@@ -19,7 +19,8 @@ class _LoadingState extends State<Loading> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => TabsScreen(),));
+      Navigator.of(context).pushAndRemoveUntil(
+                 MaterialPageRoute(builder: (context) => TabsScreen()), (route) => false);
     }
   }
 

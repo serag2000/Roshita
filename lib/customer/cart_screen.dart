@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:project/api/cart.dart';
 import 'package:project/api/show_cart.dart';
-import 'package:project/customer/details_screen.dart';
+import 'package:project/customer/login_screen.dart';
+
 import 'package:project/models/show_cart.dart';
 
 import '../../helper/const.dart';
@@ -16,23 +15,64 @@ class CartScreen extends StatefulWidget {
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
-  double totalPrice = 0.0; // متغير لتخزين السعر الإجمالي
-
-
-  void calculateTotalPrice() {
-    totalPrice = 0.0;
-    for (var item in data) {
-      totalPrice += item.total * item.cartQty; // جمع الأسعار بناءً على الكمية
-    }}
 
 late String token;
+bool isLoading = false;
 
-final _api = ShowCartApi();
+final ShowCartApi _api = ShowCartApi();
 List<CartItem> data = [];
+double totalInvoice = 0;
 
-Future<List<CartItem>> show() async {
+void calculateTotal(){
+  totalInvoice = 0;
+  for(int i = 0; i<data.length ; i++){
+    totalInvoice = totalInvoice+ data[i].total;
+  }
+}
+
+
+
+
+class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    show();
+    super.initState();
+  }
+
+    Future <void> removeItem({ required BuildContext context,required int id})async{
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      var response = await _api.removeItemFromCart(
+        url: 'api/userAuth/cart/$id',
+      );
+      if (kDebugMode) {
+        print(response.body);
+      }
+      var result = jsonDecode(response.body);
+      // ignore: use_build_context_synchronously
+      mySnackBarBack(context, 'done');
+    
+    } catch (e) {
+      mySnackBarBack(context, e.toString());
+    }
+    setState(() {
+      isLoading = false;
+    });
+
+}
+
+  Future<void> show() async {
   // isLoading = true;
   try {
+
+    setState(() {
+      isLoading = true;
+    });
+    
+    
     var response = await _api.showCart('api/userAuth/cart');
     var result = jsonDecode(response.body)['data'];
     if (response.statusCode == 200) {
@@ -65,16 +105,12 @@ Future<List<CartItem>> show() async {
   } catch (e) {
     // await prefs.setBool('islogin', false)
   }
-
-  return data;
+  calculateTotal();
+   setState(() {
+      isLoading = false;
+    });
+  
 }
-
-class _CartScreenState extends State<CartScreen> {
-  @override
-  void initState() {
-    show();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,162 +126,163 @@ class _CartScreenState extends State<CartScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              //Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(),));
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            )),
+       
       ),
-      body: Padding(
+      body:
+       Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: size.height / 1.7,
-              child: FutureBuilder<List<CartItem>>(
-                future: show(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      //physics:  NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      itemCount: snapshot.data?.length,
-                      itemBuilder: (context, index) => SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/images/Dw.png",
-                                    width: size.width / 5,
-                                    height: size.width / 5,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // SizedBox(
-                                      //   height: 5,
-                                      // ),
-                                       Text(
-                                        "${snapshot.data![index].productTitle}",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: mainTextColor,
-                                          fontWeight: FontWeight.bold,
+        child: RefreshIndicator(
+                    color: mainColor,
+          backgroundColor: backgroundScreenColor,
+          onRefresh: () => show(),
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: size.height / 1.7,
+                  child: isLoading? const Center(child: CircularProgressIndicator(),):
+                  ListView.builder(
+                        //physics:  NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/Dw.png",
+                                      width: size.width / 5,
+                                      height: size.width / 5,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // SizedBox(
+                                        //   height: 5,
+                                        // ),
+                                         Text(
+                                          "${data[index].productTitle}",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: mainTextColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      // SizedBox(
-                                      //   height: 5,
-                                      // ),
-                                      const Text(
-                                        "is simply dummy text of the printing.",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: greyTextColor,
+                                        // SizedBox(
+                                        //   height: 5,
+                                        // ),
+                                        const Text(
+                                          "is simply dummy text of the printing.",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: greyTextColor,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                       Text(
-                                        "${snapshot.data![index].total}",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: mainTextColor,
-                                          fontWeight: FontWeight.bold,
+                                        const SizedBox(
+                                          height: 10,
                                         ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                              onTap: () {
-                                                if (  snapshot.data![index].cartQty > 1) {
+                                         Text(
+                                          "${data[index].total}",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: mainTextColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            InkWell(
+                                                onTap: () {
+                                                  if ( data[index].cartQty > 1) {
+                                                    setState(() {
+                                                    data[index].cartQty = data[index].cartQty- 1 ;
+                                                    data[index].total = data[index].cartQty * data[index].price;
+                                                    calculateTotal();
+                                                    });
+                                                  }
+
+                                                },
+                                                child: const Text(
+                                                  '-',
+                                                  style:
+                                                      TextStyle(fontSize: 20),
+                                                )),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text( "${data[index].cartQty}"),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            InkWell(
+                                                onTap: () {
+                                                   if (kDebugMode) {
+                                                        print(data[index].cartQty);
+                                                      }
+                                                  // Provider.of<counter>(context).increase();
                                                   setState(() {
-                                                    "${snapshot.data![index].cartQty--}";
+                                                      if (kDebugMode) {
+                                                        print(data[index].cartQty);
+                                                      }
+                                                      data[index].cartQty = data[index].cartQty +1;
+                                                      data[index].total = data[index].cartQty* data[index].price;
+                                                      calculateTotal();
+
+
                                                   });
-                                                }
-                                              },
-                                              child: const Text(
-                                                '-',
-                                                style:
-                                                    TextStyle(fontSize: 20),
-                                              )),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text( "${snapshot.data![index].cartQty}"),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          InkWell(
-                                              onTap: () {
-                                                // Provider.of<counter>(context).increase();
-                                                setState(() {
-                                                   "${snapshot.data![index].cartQty++}";
-                                                });
-                                              },
-                                              child: const Text(
-                                                '+',
-                                                style:
-                                                    TextStyle(fontSize: 20),
-                                              )),
-                                          SizedBox(
-                                            width: size.width / 2.8,
-                                          ),
-                                          IconButton(
-                                              onPressed: () {
-                                                
-                                              },
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                                                },
+                                                child: const Text(
+                                                  '+',
+                                                  style:
+                                                      TextStyle(fontSize: 20),
+                                                )),
+                                            SizedBox(
+                                              width: size.width / 2.8,
+                                            ),
+                                            IconButton(
+                                                onPressed: ()async {
+                                                   await removeItem(context: context, id: data[index].id);
+                                                   await show();
+
+                                                },
+                                                icon: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.red,
+                                                ))
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      // separatorBuilder: (context, index) => Container(
-                      //   width: double.infinity,
-                      //   height: 1,
-                      //   color: Colors.grey[300],
-                      // ),
-                    );
-                  }else {
-                      return  SizedBox(
-                        height: size.height*0.65,
-                        child:const Center(
-                          child:   CircularProgressIndicator(
-                            color: Colors.black,
-                          ),
-                        ),
-                      );
-                    }
-                  
-                },
+                        // separatorBuilder: (context, index) => Container(
+                        //   width: double.infinity,
+                        //   height: 1,
+                        //   color: Colors.grey[300],
+                        // ),
+                      )
+                   
+                    
               ),
-            ),
-            // SizedBox(
-            //   height: size.width / 12,
-            // ),
-          ],
+                
+              
+              // SizedBox(
+              //   height: size.width / 12,
+              // ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Padding(
@@ -268,7 +305,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   Text(
-                    "\$${totalPrice.toStringAsFixed(2)}",
+                    "\$ $totalInvoice",
                     style: const TextStyle(
                       fontSize: 14,
                       color: mainTextColor,
@@ -287,7 +324,7 @@ class _CartScreenState extends State<CartScreen> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CheckoutScreen(),
+                      builder: (context) =>  CheckoutScreen(data: data,total: totalInvoice),
                     ));
               },
               child: Container(

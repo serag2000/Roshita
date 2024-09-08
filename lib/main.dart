@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:project/customer/loading.dart';
+import 'package:project/doctor/user_not_regester.dart';
+
+import 'pharmacist/home_pharmacist.dart';
+import 'pharmacist/roshita_details.dart';
 
 
 
 
-
-//import 'package:project/customer/login_screen.dart';
 
 
 
@@ -28,8 +30,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false,
-      home: Loading(),
+      home: UserNotRegester(),
     );
   }
 }
-// خلي الhome تخش على auth
+// خلي الhome تخش على Loading

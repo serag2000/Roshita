@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project/customer/loading.dart';
 import 'package:project/pharmacist/login_pharmacist.dart';
+import 'package:project/pharmacist/pharmacist_proflie.dart';
 
 class HomePharmacist extends StatefulWidget {
   const HomePharmacist({super.key});
@@ -13,6 +15,9 @@ class _HomePharmacistState extends State<HomePharmacist> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [IconButton(onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilepharmacistScreen(),));
+        }, icon: Icon(Icons.person), color: Colors.blue,)],
         title: const Text('Pharmacist', style: TextStyle(
           color: Colors.black
         )),
@@ -33,26 +38,44 @@ class _HomePharmacistState extends State<HomePharmacist> {
                leading: const Icon(Icons.logout),
                 title: const Text('Log out'),
                 onTap: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPharmacist(),));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  Loading(),));
                 },
             )
           ],
         ),
       ),
       
-      body: Center(
-        child: InkWell(
-          onTap: () {
-            
-          },
+      body: InkWell(
+        onTap: () {
+          
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Container(
-            height: 50,
-            width: 150,
+            height: 200,
+            width: double.infinity,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue)
+              border: Border.all(color: Colors.blue),
+             borderRadius: BorderRadius.circular(20) 
               
             ),
-            child: const Center(child: Text('Show Roshita')),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('user name: '),
+                  SizedBox(
+                    height: 13,
+                  ),
+                  Text('Doctor name'),
+                   SizedBox(
+                    height: 13,
+                  ),
+                  Text('Specialization '),
+                ],
+              ),
+            ),
           ),
         ),
       ),

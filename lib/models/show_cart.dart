@@ -6,15 +6,17 @@ import 'dart:convert';
 
 CartItem showCartFromJson(String str) => CartItem.fromJson(json.decode(str));
 
-String showCartToJson(CartItem data) => json.encode(data.toJson());
+
 
 class CartItem {
     int id;
     int cartQty;
     String productTitle;
     double total;
+    double price;
 
     CartItem({
+      required this.price,
         required this.id,
         required this.cartQty,
         required this.productTitle,
@@ -22,16 +24,13 @@ class CartItem {
     });
 
     factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
-        id: json["id"],
+        id: json["pId"],
         cartQty: json["cartQty"],
+        price: json['price']?.toDouble(),
         productTitle: json["productTitle"],
         total: json["total"]?.toDouble(),
+
     );
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "cartQty": cartQty,
-        "productTitle": productTitle,
-        "total": total,
-    };
+  
 }

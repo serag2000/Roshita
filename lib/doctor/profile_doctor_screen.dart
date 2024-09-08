@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:project/doctor/add_description.dart';
+import 'dart:convert';
 
-import 'edit_doctor_profile.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:project/api/doctor_profile.dart';
+import 'package:project/doctor/add_description.dart';
+import 'package:project/models/admin_model/doctor_control.dart';
+
 
 class ProfileDoctorScreen extends StatefulWidget {
   const ProfileDoctorScreen({super.key});
@@ -9,9 +13,73 @@ class ProfileDoctorScreen extends StatefulWidget {
   @override
   State<ProfileDoctorScreen> createState() => _ProfileDoctorScreenState();
 }
+late String token;
+
+final _api = ShowDoctorProfile();
+//List<DoctorControl> data = [];
+  //final _api = ShowDoctorProfile();
+  DoctorControl data = DoctorControl (id: 0, name: 'unkown', email: 'ff',phoneNumber: '5',gender: '5',specilization: '') ;
+  bool isLoading = false;
+  bool canEdit = true;
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  TextEditingController specilization = TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
+Future<void> show({required BuildContext context}) async {
+  // isLoading = true;
+  try {
+     var response = await _api.getdoctorProfile('api/doctorAuth/DoctorProfile');
+    var result = jsonDecode(response.body)['data'];
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      data = DoctorControl.fromJson(json);
+      name.text = data.name;
+      email.text = data.email;
+      gender.text= data.gender;
+      phoneNumber.text= data.phoneNumber;
+      specilization.text= data.specilization;
+      if (kDebugMode) {
+        print("token:" + token.toString());
+        // print("dddd ${jsonDecode(response.body)['data']}");
+        // print("res: $result");
+        // print("resultssss ===> ${data}");
+      }
+
+      // await prefs.setBool('islogin', true);
+      // await prefs.setString('token', result['access_token']);
+      // // ignore: use_build_context_synchronously
+
+      // setCoins(data);
+    } else {
+      if (kDebugMode) {
+        print("response.statusCode ===> ${response.statusCode}");
+        print("data ====> $data");
+      }
+      if (kDebugMode) {
+        print("response ===> ${response.body}");
+      }
+      // ignore: use_build_context_synchronously
+      // mySnackBarBack(context, result["error"]);
+
+      // await prefs.setBool('islogin', false);
+    }
+  } catch (e) {
+    // await prefs.setBool('islogin', false)
+  }
+
+  
+}
 
 class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
   final forkey = GlobalKey<FormState>();
+  
+   @override
+  void initState() {
+    show(context: context);
+    super.initState();
+  }
+bool canRead= true;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,7 +115,7 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                   SizedBox(
                     height: size.width / 25,
                   ),
-                  const Text('Serag Sh',
+                   Text(name.text,
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                   SizedBox(
@@ -60,6 +128,8 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                 child: Column(
                   children: [
                     TextFormField(
+                       readOnly:canRead ,
+                      controller: name,
                       decoration: const InputDecoration(
                         labelText: ('UserName'),
                       ),
@@ -72,6 +142,8 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                       },
                     ),
                     TextFormField(
+                       readOnly:canRead ,
+                      controller: gender,
                       decoration: const InputDecoration(
                         labelText: ('Gender'),
                       ),
@@ -84,6 +156,8 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                       },
                     ),
                     TextFormField(
+                      readOnly:canRead ,
+                      controller: phoneNumber,
                         decoration: const InputDecoration(
                           labelText: ('Phone Number'),
                         ),
@@ -99,6 +173,8 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                           return null;
                         }),
                     TextFormField(
+                       readOnly:canRead ,
+                      controller: email,
                         decoration: const InputDecoration(
                           labelText: ('Email'),
                         ),
@@ -113,6 +189,8 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                           return null;
                         }),
                     TextFormField(
+                       readOnly:canRead ,
+                      controller: specilization,
                       decoration: const InputDecoration(
                         labelText: ('specializatoin'),
                       ),
@@ -123,32 +201,32 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const EditDoctorProfile()));
-                    },
-                    child: Container(
-                      width: 85,
-                      height: size.width / 11,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.blue, width: 2),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Edit",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     Navigator.pushReplacement(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (_) => const EditDoctorProfile()));
+                  //   },
+                  //   child: Container(
+                  //     width: 85,
+                  //     height: size.width / 11,
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.blue,
+                  //       borderRadius: BorderRadius.circular(5),
+                  //       border: Border.all(color: Colors.blue, width: 2),
+                  //     ),
+                  //     child: const Center(
+                  //       child: Text(
+                  //         "Edit",
+                  //         style: TextStyle(
+                  //           fontSize: 14,
+                  //           color: Colors.white,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
                     width: 250,
                     height: size.width / 11,
@@ -181,11 +259,13 @@ class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
                             SizedBox(
                               width: size.width / 30,
                             ),
-                            const Text(
-                              "Add Description",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.blue,
+                            Center(
+                              child: const Text(
+                                "Add Description",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.blue,
+                                ),
                               ),
                             ),
                           ],

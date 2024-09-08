@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:project/api/prdouct.dart';
 // import 'package:project/api/api_http.dart';
 import 'package:project/customer/cart_screen.dart';
@@ -14,11 +15,11 @@ import 'package:project/customer/profile_screen.dart';
 import 'package:project/customer/settings_screen.dart';
 import 'package:project/customer/view_doctors.dart';
 import 'package:project/models/all_products.dart';
+import 'package:project/widgets/login_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/const.dart';
 // import '../models/all_products.dart';
-import '../widgets/product_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,15 +31,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late String token;
 
-  
-
   @override
-  void initState(){
+  void initState() {
     getProducts();
     super.initState();
   }
-  
-  
 
   final _api = ProductApi();
   List<AllProduct> data = [];
@@ -108,12 +105,17 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ));
+              onPressed: () async {
+                String token = await getToken();
+                if (token.isEmpty) {
+                  loginDialog(context: context, size: size);
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfile(),
+                      ));
+                }
               },
               icon: const CircleAvatar(
                   backgroundColor: Color.fromRGBO(250, 249, 249, 1),
@@ -138,7 +140,76 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("snap: ${snapshot.data?.length}"),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  "assets/images/adv.png",
+                                  width: size.width / 2,
+                                  height: 200,
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Image.asset(
+                                  "assets/images/adv.png",
+                                  width: size.width / 2,
+                                  height: 200,
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Image.asset(
+                                  "assets/images/adv.png",
+                                  width: size.width / 2,
+                                  height: 200,
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Image.asset(
+                                  "assets/images/adv.png",
+                                  width: size.width / 2,
+                                  height: 200,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: size.width / 9,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Popular Product",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: mainTextColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                InkWell(
+                                  child: Text(
+                                    "More",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: mainColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: size.width / 12,
+                          ),
                           SizedBox(
                               width: double.infinity,
                               height: size.height * 1.5,
@@ -170,16 +241,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         Center(
                                           child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                      DetailsScreen(productId: snapshot.data?[index].id, title: snapshot.data?[index].title, description: snapshot.data?[index].description, price: snapshot.data?[index].price )),
-                                              );
+                                            onTap: () async {
+                                              String token = await getToken();
+                                              if (token.isEmpty) {
+                                                loginDialog(
+                                                    context: context,
+                                                    size: size);
+                                              } else {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          DetailsScreen(
+                                                              productId:
+                                                                  snapshot
+                                                                      .data?[
+                                                                          index]
+                                                                      .id,
+                                                              title: snapshot
+                                                                  .data?[index]
+                                                                  .title,
+                                                              description: snapshot
+                                                                  .data?[index]
+                                                                  .description,
+                                                              price: snapshot
+                                                                  .data?[index]
+                                                                  .price)),
+                                                );
+                                              }
                                             },
                                             child: Image.asset(
-                                             'assets/images/Dw.png',
+                                              'assets/images/Dw.png',
                                               //"${snapshot.data?[index].imgUrl1}",
                                               height: size.width / 3.4,
                                               fit: BoxFit.cover,
@@ -190,12 +282,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           height: 10,
                                         ),
                                         Text(
+                                          maxLines: 2,
                                           "${snapshot.data?[index].title}",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: mainTextColor,
-                                          ),
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: mainTextColor,
+                                              overflow: TextOverflow.ellipsis),
                                         ),
                                         const SizedBox(
                                           height: 2,
@@ -218,14 +311,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Text(
                                               "${snapshot.data?[index].price} D.L",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold,
                                                 color: mainColor,
                                               ),
                                             ),
                                             InkWell(
-                                              onTap: () {},
+                                              onTap: () async {
+                                                String token = await getToken();
+                                                if (token.isEmpty) {
+                                                  loginDialog(
+                                                      context: context,
+                                                      size: size);
+                                                } else {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DetailsScreen(
+                                                                productId:
+                                                                    snapshot
+                                                                        .data?[
+                                                                            index]
+                                                                        .id,
+                                                                title:
+                                                                    snapshot
+                                                                        .data?[
+                                                                            index]
+                                                                        .title,
+                                                                description: snapshot
+                                                                    .data?[
+                                                                        index]
+                                                                    .description,
+                                                                price: snapshot
+                                                                    .data?[
+                                                                        index]
+                                                                    .price)),
+                                                  );
+                                                }
+                                              },
                                               child: Container(
                                                 width: 60,
                                                 height: 21,
@@ -291,10 +416,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       );
                     } else {
-                      return  SizedBox(
-                        height: size.height*0.65,
-                        child:const Center(
-                          child:   CircularProgressIndicator(
+                      return SizedBox(
+                        height: size.height * 0.65,
+                        child: const Center(
+                          child: CircularProgressIndicator(
                             color: Colors.black,
                           ),
                         ),
@@ -310,13 +435,13 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(10.0),
           child: ListView(
             children: [
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text('Home'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.home),
+              //   title: const Text('Home'),
+              //   onTap: () {
+              //     Navigator.pop(context);
+              //   },
+              // ),
               ListTile(
                 leading: const Icon(Icons.person),
                 title: const Text('View Doctors'),
@@ -328,17 +453,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       ));
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.shopping_cart_rounded),
-                title: const Text('Cart'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CartScreen(),
-                      ));
-                },
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.shopping_cart_rounded),
+              //   title: const Text('Cart'),
+              //   onTap: () async {
+              //     String token = await getToken();
+              //     if (token.isEmpty) {
+              //       loginDialog(context: context, size: size);
+              //     } else {
+              //       Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //             builder: (context) => const CartScreen(),
+              //           ));
+              //     }
+              //   },
+              // ),
               ListTile(
                 leading: const Icon(Icons.archive),
                 title: const Text('Archive'),

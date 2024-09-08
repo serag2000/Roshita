@@ -19,7 +19,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return Scaffold( 
       body: AnimatedSwitcher( 
         duration: kThemeAnimationDuration, 
-        child: currentIndex == 0 ? const HomeScreen() : const CartScreen(), 
+        child: currentIndex == 0 ? const HomeScreen() :   const CartScreen(), 
       ), 
       
  
