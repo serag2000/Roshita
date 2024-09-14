@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/api/doctor_profile.dart';
+import 'package:project/customer/login_screen.dart';
 import 'package:project/doctor/add_description.dart';
+import 'package:project/doctor/user_not_regester.dart';
 import 'package:project/models/admin_model/doctor_control.dart';
-
 
 class ProfileDoctorScreen extends StatefulWidget {
   const ProfileDoctorScreen({super.key});
@@ -13,32 +14,39 @@ class ProfileDoctorScreen extends StatefulWidget {
   @override
   State<ProfileDoctorScreen> createState() => _ProfileDoctorScreenState();
 }
+
 late String token;
 
 final _api = ShowDoctorProfile();
 //List<DoctorControl> data = [];
-  //final _api = ShowDoctorProfile();
-  DoctorControl data = DoctorControl (id: 0, name: 'unkown', email: 'ff',phoneNumber: '5',gender: '5',specilization: '') ;
-  bool isLoading = false;
-  bool canEdit = true;
-  TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController gender = TextEditingController();
-  TextEditingController specilization = TextEditingController();
-  TextEditingController phoneNumber = TextEditingController();
+//final _api = ShowDoctorProfile();
+DoctorControl data = DoctorControl(
+    id: 0,
+    name: 'unkown',
+    email: 'ff',
+    phoneNumber: '5',
+    gender: '5',
+    specilization: '');
+bool isLoading = false;
+bool canEdit = true;
+TextEditingController name = TextEditingController();
+TextEditingController email = TextEditingController();
+TextEditingController gender = TextEditingController();
+TextEditingController specilization = TextEditingController();
+TextEditingController phoneNumber = TextEditingController();
 Future<void> show({required BuildContext context}) async {
   // isLoading = true;
   try {
-     var response = await _api.getdoctorProfile('api/doctorAuth/DoctorProfile');
+    var response = await _api.getdoctorProfile('api/doctorAuth/DoctorProfile');
     var result = jsonDecode(response.body)['data'];
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       data = DoctorControl.fromJson(json);
       name.text = data.name;
       email.text = data.email;
-      gender.text= data.gender;
-      phoneNumber.text= data.phoneNumber;
-      specilization.text= data.specilization;
+      gender.text = data.gender;
+      phoneNumber.text = data.phoneNumber;
+      specilization.text = data.specilization;
       if (kDebugMode) {
         print("token:" + token.toString());
         // print("dddd ${jsonDecode(response.body)['data']}");
@@ -67,19 +75,18 @@ Future<void> show({required BuildContext context}) async {
   } catch (e) {
     // await prefs.setBool('islogin', false)
   }
-
-  
 }
 
 class _ProfileDoctorScreenState extends State<ProfileDoctorScreen> {
   final forkey = GlobalKey<FormState>();
-  
-   @override
+
+  @override
   void initState() {
     show(context: context);
     super.initState();
   }
-bool canRead= true;
+
+  bool canRead = true;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -115,9 +122,9 @@ bool canRead= true;
                   SizedBox(
                     height: size.width / 25,
                   ),
-                   Text(name.text,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  Text(name.text,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20)),
                   SizedBox(
                     height: size.width / 25,
                   ),
@@ -128,7 +135,7 @@ bool canRead= true;
                 child: Column(
                   children: [
                     TextFormField(
-                       readOnly:canRead ,
+                      readOnly: canRead,
                       controller: name,
                       decoration: const InputDecoration(
                         labelText: ('UserName'),
@@ -142,7 +149,7 @@ bool canRead= true;
                       },
                     ),
                     TextFormField(
-                       readOnly:canRead ,
+                      readOnly: canRead,
                       controller: gender,
                       decoration: const InputDecoration(
                         labelText: ('Gender'),
@@ -156,8 +163,8 @@ bool canRead= true;
                       },
                     ),
                     TextFormField(
-                      readOnly:canRead ,
-                      controller: phoneNumber,
+                        readOnly: canRead,
+                        controller: phoneNumber,
                         decoration: const InputDecoration(
                           labelText: ('Phone Number'),
                         ),
@@ -173,8 +180,8 @@ bool canRead= true;
                           return null;
                         }),
                     TextFormField(
-                       readOnly:canRead ,
-                      controller: email,
+                        readOnly: canRead,
+                        controller: email,
                         decoration: const InputDecoration(
                           labelText: ('Email'),
                         ),
@@ -189,7 +196,7 @@ bool canRead= true;
                           return null;
                         }),
                     TextFormField(
-                       readOnly:canRead ,
+                      readOnly: canRead,
                       controller: specilization,
                       decoration: const InputDecoration(
                         labelText: ('specializatoin'),
@@ -198,83 +205,70 @@ bool canRead= true;
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.pushReplacement(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (_) => const EditDoctorProfile()));
-                  //   },
-                  //   child: Container(
-                  //     width: 85,
-                  //     height: size.width / 11,
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.blue,
-                  //       borderRadius: BorderRadius.circular(5),
-                  //       border: Border.all(color: Colors.blue, width: 2),
-                  //     ),
-                  //     child: const Center(
-                  //       child: Text(
-                  //         "Edit",
-                  //         style: TextStyle(
-                  //           fontSize: 14,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  Container(
-                    width: 250,
-                    height: size.width / 11,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.blue, width: 1),
-                    ),
-                    child: Center(
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => AddDescription(),));
-                        },
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: size.width / 30,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: Colors.blue,
-                                  size: 15,
-                                )),
-                            SizedBox(
-                              width: size.width / 30,
-                            ),
-                            Center(
-                              child: const Text(
-                                "Add Description",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.blue,
-                                ),
+              Container(
+                width: 250,
+                height: size.width / 11,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: Colors.blue, width: 1),
+                ),
+                child: Center(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const UserNotRegester(),
+                          ));
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: size.width / 30,
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.blue,
                               ),
                             ),
-                          ],
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.blue,
+                              size: 15,
+                            )),
+                        SizedBox(
+                          width: size.width / 30,
                         ),
-                      ),
+                        const Center(
+                          child: Text(
+                            "Add Description",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
+              SizedBox(
+                height: size.width / 25,
+              ),
+             Center(
+                  child:ElevatedButton(
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+                    onPressed: (){
+                     Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ));
+                  }, child: Text('Log Out'))
+                ),
             ],
           ),
         ),
@@ -282,3 +276,15 @@ bool canRead= true;
     );
   }
 }
+    //  SizedBox(
+    //                           width: size.width / 100,
+    //                         ),
+    //                         const Center(
+    //                           child: Text(
+    //                             "LogOut",
+    //                             style: TextStyle(
+    //                               fontSize: 14,
+    //                               color: Colors.red,
+    //                             ),
+    //                           ),
+    //                         ),

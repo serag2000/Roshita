@@ -99,6 +99,7 @@ import 'package:project/doctor/profile_doctor_screen.dart';
 import 'package:project/models/admin_model/all_pharmacists.dart';
 
 
+// ignore: must_be_immutable
 class CreateAccountPharmcist extends StatefulWidget {
   CreateAccountPharmcist({super.key}) {
     canEdit = false;

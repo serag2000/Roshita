@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/helper/const.dart';
@@ -34,23 +36,39 @@ class CreateProductApi{
   get(Uri parse) {}
 
 
-  Future<Response> addToProduct({required String url, required String title, required String description, required String price, required String qtyInStock, required String imgUrl1, required String categoryId, required String parcode}) async{
+  Future<Response> addToProduct({required String url, required String title, required String description, required dynamic price, required dynamic qtyInStock, required String imgUrl1, required int categoryId, required String parcode}) async{
    String token = await getToken();
+    
     Response res = await http.post(
       Uri.parse("$baseUrl$url"),
       headers: {
        'Authorization': 'Bearer $token',
+       'Accept':'application/json'
       },
-      body: {
+      body: 
+        {
         'title':title,
         'description':description,
         'price':price,
         'qtyInStock':qtyInStock,
-        'imgUrl1': imgUrl1,
-        'categoryId':categoryId,
-        'parcode' : parcode
+        'categoryId':categoryId.toString(),
+        'parcode' : parcode,
+        
       }
       );
+      if (kDebugMode) {
+        print( jsonEncode(
+        {
+        'title':title,
+        'parcode' : parcode,
+        'description':description,
+        'price':price,
+        'qtyInStock':qtyInStock,
+        'categoryId':categoryId,
+        
+      }
+      ),);
+      }
       return res;
   }
 
@@ -86,7 +104,21 @@ class CreateProductApi{
     });
     return res;
  }
-
+   Future<Response> getCategorey(url) async {
+    //String token = "efjhksdgfewrufhl wiheohferhfv eocghfne"
+    
+ 
+    if (kDebugMode) {
+      print("GET ON $baseUrl$url");
+    }
+     String token = await getToken();
+    final res = await http.get(Uri.parse("$baseUrl$url"), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+ 
+    return res;
+ }
   
 }
 

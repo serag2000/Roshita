@@ -1,17 +1,14 @@
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:project/api/show_invoice.dart';
-import 'package:project/customer/home_screen.dart';
+
 import 'package:project/models/show_cart.dart';
 
-import 'package:project/models/show_invoice.dart';
 import 'package:project/tabs_screen.dart';
 
 
 import '../helper/const.dart';
 
+// ignore: must_be_immutable
 class OrderScreen extends StatefulWidget {
    OrderScreen({super.key,required this.data,required this.total});
   late List<CartItem> data;

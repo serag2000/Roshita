@@ -33,12 +33,12 @@ class ProductControl {
     factory ProductControl.fromJson(Map<String, dynamic> json) => ProductControl(
         id: json["id"],
         title: json["title"],
+        parcode: json["parcode"],
         description: json["description"],
         price: json["price"],
         qtyInStock: json["qtyInStock"],
         imgUrl1: json["imgUrl1"],
         categoryId: json["categoryId"],
-        parcode: json["parcode"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
     );
@@ -46,12 +46,12 @@ class ProductControl {
     Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
+          "parcode": parcode,
         "description": description,
         "price": price,
         "qtyInStock": qtyInStock,
         "imgUrl1": imgUrl1,
         "categoryId": categoryId,
-         "parcode": parcode,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
     };

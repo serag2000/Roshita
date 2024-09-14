@@ -195,7 +195,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                            Text(widget.data[index].productTitle,
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 14)),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 8,
                                   ),
                            Text("${widget.data[index].total}",
@@ -212,7 +212,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Total',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -221,7 +221,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                   Text(
                     '${widget.total} LYD',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -291,11 +291,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     color: mainColor,
                     border: Border.all(color: mainColor, width: 2),
                   ),
-                  child: islogin?Center(
+                  child: islogin?const Center(
                     child: CircularProgressIndicator(
                       color: Colors.white,
                     ),
-                  ): Center(
+                  ): const Center(
                     child: Text(
                       "Confirm Checkout",
                       textAlign: TextAlign.center,

@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/api/forget_password.dart';
-import 'package:project/customer/forgetpassword/reset_password.dart';
-import 'package:http/http.dart' as http;
 import 'package:project/customer/login_screen.dart';
 
 class Verification extends StatefulWidget {

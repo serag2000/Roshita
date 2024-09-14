@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/api/user_profile.dart';
-import 'package:project/customer/home_screen.dart';
 import 'package:project/customer/login_screen.dart';
 import 'package:project/models/user_profile.dart';
 

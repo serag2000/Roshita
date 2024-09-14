@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/api/cart.dart';
 import 'package:project/customer/cart_screen.dart';
-import 'package:project/tabs_screen.dart';
 
+// ignore: must_be_immutable
 class DetailsScreen extends StatefulWidget {
   int? productId;
   String? title;
@@ -27,7 +27,7 @@ add(int? productId) async{
 
   }catch(e){
     if(kDebugMode){
-      print("eror: " + e.toString());
+      print("eror: $e");
     }
   }
 }
@@ -71,7 +71,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   ),
                   Text('${widget.title}',
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                   SizedBox(
                     height: size.width / 20,
                   ),
@@ -90,7 +90,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           children: [
             Text(
               "\$ ${widget.price}",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -101,9 +101,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
             InkWell(
               onTap: () async {
                 if(kDebugMode){
-                  print("id :" + widget.productId.toString());
+                  print("id :${widget.productId}");
                 }
-                await add(widget.productId!) != '' ? Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(),)) : SnackBar(content: Text('error'));
+                // ignore: use_build_context_synchronously
+                await add(widget.productId!) != '' ? Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen(),)) : const SnackBar(content: Text('error'));
               }
               ,
               child: Container(

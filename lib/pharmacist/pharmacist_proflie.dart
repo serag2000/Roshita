@@ -2,11 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:project/api/doctor_profile.dart';
 import 'package:project/api/pharmacist.dart';
-import 'package:project/doctor/add_description.dart';
 import 'package:project/models/admin_model/all_pharmacists.dart';
-import 'package:project/models/admin_model/doctor_control.dart';
 
 
 class ProfilepharmacistScreen extends StatefulWidget {

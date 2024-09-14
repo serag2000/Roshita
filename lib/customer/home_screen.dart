@@ -5,10 +5,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:project/api/prdouct.dart';
 // import 'package:project/api/api_http.dart';
-import 'package:project/customer/cart_screen.dart';
 import 'package:project/customer/details_screen.dart';
 import 'package:project/customer/login_screen.dart';
 import 'package:project/customer/profile_screen.dart';
@@ -180,30 +178,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(
                             height: size.width / 9,
                           ),
-                          const Padding(
+                           Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: 5,
                             ),
                             child: Row(
                               children: [
                                 Text(
-                                  "Popular Product",
+                                  "${data.length}",
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: mainTextColor,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                InkWell(
-                                  child: Text(
-                                    "More",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: mainColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
+
                               ],
                             ),
                           ),

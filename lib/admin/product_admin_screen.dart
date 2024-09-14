@@ -3,9 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/admin/modify_screen.dart';
-import 'package:project/api/get_productsbuforadmine.dart';
 import 'package:project/api/product_control.dart';
-import 'package:project/models/admin_model/all_productsAdmine.dart';
 import 'package:project/models/all_products.dart';
 
 class ProductAdmin extends StatefulWidget {
@@ -26,9 +24,8 @@ Future<List<AllProduct>> show() async {
     var response = await _api.getProducts('api/adminAuth/product');
     var result = jsonDecode(response.body)['data'];
     if (response.statusCode == 200) {
-      data = result
-          .map<AllProduct>((item) => AllProduct.fromJson(item))
-          .toList();
+      data =
+          result.map<AllProduct>((item) => AllProduct.fromJson(item)).toList();
       if (kDebugMode) {
         print("data:" + result);
         // print("dddd ${jsonDecode(response.body)['data']}");
@@ -132,7 +129,7 @@ class _ProductAdminState extends State<ProductAdmin> {
                   ),
                   SizedBox(
                     height: 650,
-                    width: double.infinity,
+                    width: 500,
                     child: ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) => Padding(
@@ -159,31 +156,42 @@ class _ProductAdminState extends State<ProductAdmin> {
                                 ),
                                 Row(
                                   children: [
-                                    Image.asset('assets/images/Dw.png',
-                                        width: 100, height: 100),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('${snapshot.data![index].title}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
+                                    Image.asset(
+                                      'assets/images/Dw.png',
+                                      width: 100,
+                                      height: 100,
+                                    ),
+                                    Expanded(
+                                      // استخدم Expanded هنا لتوفير المساحة المتاحة
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${snapshot.data![index].title}',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
                                             '${snapshot.data![index].price} ',
-                                            style: const TextStyle(fontSize: 12)),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text( 
-                                          
-                                          '${snapshot.data![index].description}',maxLines: 1,overflow: TextOverflow.ellipsis,
-                                          
-                                          style: const TextStyle(
-                                            
-                                            fontWeight: FontWeight.bold
+                                            style:
+                                                const TextStyle(fontSize: 12),
                                           ),
+                                          const SizedBox(
+                                            height: 20,
                                           ),
-                                      ],
+                                          Text(
+                                            '${snapshot.data![index].description}',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),

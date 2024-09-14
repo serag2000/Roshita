@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project/customer/loading.dart';
-import 'package:project/pharmacist/login_pharmacist.dart';
 import 'package:project/pharmacist/pharmacist_proflie.dart';
 
 class HomePharmacist extends StatefulWidget {

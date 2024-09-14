@@ -7,7 +7,6 @@ import 'package:project/admin/home_screen_admin.dart';
 import 'package:project/api/show_doctorsforadmin.dart';
 import 'package:project/helper/const.dart';
 import 'package:project/models/admin_model/doctor_control.dart';
-import 'package:project/models/user_doctors.dart';
 
 class DoctorsPage extends StatefulWidget {
   const DoctorsPage({super.key});
@@ -145,20 +144,20 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                       child: Column(
                                         children: [
                                           Text(
-                                            '${snapshot.data![index].name}',
-                                            style: TextStyle(
+                                            snapshot.data![index].name,
+                                            style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 14,
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 15,
                                           ),
                                           Text(
-                                            '${snapshot.data![index].email}',
+                                            snapshot.data![index].email,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 14,
                                             ),
@@ -172,18 +171,18 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                     Column(
                                       children: [
                                         Text(
-                                          '${snapshot.data![index].phoneNumber}',
-                                          style: TextStyle(
+                                          snapshot.data![index].phoneNumber,
+                                          style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 14,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                         Text(
-                                          '${snapshot.data![index].specilization}',
-                                          style: TextStyle(
+                                          snapshot.data![index].specilization,
+                                          style: const TextStyle(
                                             color: Colors.black,
                                             overflow: TextOverflow.ellipsis,
                                             fontSize: 14,

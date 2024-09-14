@@ -5,13 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/admin/home_screen_admin.dart';
 import 'package:project/customer/create_account.dart';
-import 'package:project/customer/home_screen.dart';
 import 'package:project/doctor/profile_doctor_screen.dart';
 import 'package:project/pharmacist/home_pharmacist.dart';
 import 'package:project/tabs_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_http.dart';
+import '../pharmacist/roshita_details.dart';
 import 'forgetpassword/forget_password.dart';
 
 bool islogin = false;
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const HomePharmacist(),
+                builder: (context) =>  RoshitaDetails(),
               ));
         } else {
           // ignore: use_build_context_synchronously

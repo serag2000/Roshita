@@ -157,6 +157,7 @@
 //   }
 // }
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/api/api_http.dart';
 
@@ -200,9 +201,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0)),
                     ),
-                    validator: (value) {
- 
-                    },
+           
                   ),
                   SizedBox(
                     height: size.width / 20,
@@ -285,9 +284,11 @@ class _CreateAccountState extends State<CreateAccount> {
                                     builder: (_) => const LoginScreen()));
                           });
                         }catch(e){
-                          print("e===>$e");
+                          if (kDebugMode) {
+                            print("e===>$e");
+                          }
                            ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Error")));
+                      const SnackBar(content: Text("Error")));
                         }
                       
                       }
